@@ -1,3 +1,4 @@
+#include <locale.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <termios.h>
@@ -5,7 +6,7 @@
 
 int main() {
     struct termios old_tio, new_tio;
-    unsigned char c;
+    unsigned char c[2];
 
     tcgetattr(STDIN_FILENO, &old_tio);
     new_tio = old_tio;
@@ -14,11 +15,10 @@ int main() {
     tcsetattr(STDIN_FILENO, TCSANOW, &new_tio);
 
     while (1) {
-        if (read(STDIN_FILENO, &c, 1) == 1) {
-            printf("Caractere lido: %c\n", c);
-            if (c == 'q') {
-                break;
-            }
+        read(STDIN_FILENO, &c, 1);
+        printf("Caractere lido: %s\n", c);
+        if (c[0] == 'q') {
+            break;
         }
     }
 
